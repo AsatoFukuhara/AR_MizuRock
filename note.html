@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Resizable Notebook Example</title>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 2;
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('note.jpg');
+
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+
+        let width = 0.8; // 初期の幅
+        let height = 0.05; // 初期の高さ
+        let depth = 1; // 初期の奥行き
+
+        const geometry = new THREE.BoxGeometry(width, height, depth);
+
+        const notebook = new THREE.Mesh(geometry, material);
+
+        scene.add(notebook);
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            notebook.rotation.x += 0.01;
+            notebook.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        // 幅、高さ、奥行きを変更する関数
+        function changeSize(newWidth, newHeight, newDepth) {
+            width = newWidth;
+            height = newHeight;
+            depth = newDepth;
+            const newGeometry = new THREE.BoxGeometry(width, height, depth);
+            notebook.geometry = newGeometry;
+        }
+
+        
+    </script>
+</body>
+</html>
