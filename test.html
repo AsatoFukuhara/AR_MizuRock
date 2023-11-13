@@ -16,7 +16,9 @@
 
       // テクスチャの読み込み
       const textureLoader = new THREE.TextureLoader();
-      const pencilTexture = textureLoader.load('pencil_under.jpeg');
+      const pencilTexture = textureLoader.load('http://localhost:8000/pencil_under.jpeg'); // ローカルWebサーバーのアドレスを指定
+
+
 
       // 鉛筆の本体部分（円柱）
       const bodyGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2, 32);
