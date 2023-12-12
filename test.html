@@ -9,50 +9,52 @@
     <script>
       // three.jsのセットアップ
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
       const renderer = new THREE.WebGLRenderer();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
 
       // テクスチャの読み込み
       const textureLoader = new THREE.TextureLoader();
-      const pencilTexture = textureLoader.load('http://localhost:8000/pencil_under.jpeg'); // ローカルWebサーバーのアドレスを指定
+      const pencilTexture = textureLoader.load( 'http://localhost:8000/pencil_under.jpeg' ); // ローカルWebサーバーのアドレスを指定
 
 
 
       // 鉛筆の本体部分（円柱）
-      const bodyGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2, 32);
-      const bodyMaterial = new THREE.MeshBasicMaterial({ map: pencilTexture });
-      const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+      const bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 2, 32 );
+      const bodyMaterial = new THREE.MeshBasicMaterial( { map: pencilTexture } );
+      const bodyMesh = new THREE.Mesh( bodyGeometry, bodyMaterial );
 
       // 鉛筆の先端部分（円錐）
-      const tipGeometry = new THREE.ConeGeometry(0.1, 0.3, 32);
-      const tipMaterial = new THREE.MeshBasicMaterial({ map: pencilTexture });
-      const tipMesh = new THREE.Mesh(tipGeometry, tipMaterial);
-      tipMesh.position.set(0, 1.1, 0); // 本体の先端に配置
+      const tipGeometry = new THREE.ConeGeometry( 0.1, 0.3, 32 );
+      const tipMaterial = new THREE.MeshBasicMaterial( { map: pencilTexture } );
+      const tipMesh = new THREE.Mesh( tipGeometry, tipMaterial );
+      tipMesh.position.set( 0, 1.1, 0 ); // 本体の先端に配置
 
       // 鉛筆の芯（本体内部）
-      const coreGeometry = new THREE.CylinderGeometry(0.03, 0.03, 1.9, 32);
-      const coreMaterial = new THREE.MeshBasicMaterial({ map: pencilTexture });
-      const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
-      coreMesh.position.set(0, 0.05, 0); // 本体内部に配置
+      const coreGeometry = new THREE.CylinderGeometry( 0.03, 0.03, 1.9, 32 );
+      const coreMaterial = new THREE.MeshBasicMaterial( { map: pencilTexture } );
+      const coreMesh = new THREE.Mesh( coreGeometry, coreMaterial );
+      coreMesh.position.set( 0, 0.05, 0 ); // 本体内部に配置
 
       // グループを作成して形状を組み合わせる
       const pencilGroup = new THREE.Group();
-      pencilGroup.add(bodyMesh);
-      pencilGroup.add(tipMesh);
-      pencilGroup.add(coreMesh);
-      scene.add(pencilGroup);
+      pencilGroup.add( bodyMesh );
+      pencilGroup.add( tipMesh );
+      pencilGroup.add( coreMesh );
+      scene.add( pencilGroup );
 
       // カメラの設定
       camera.position.z = 3;
 
       // アニメーションループの設定
       const animate = () => {
-        requestAnimationFrame(animate);
-        pencilGroup.rotation.x += 0.01;
-        pencilGroup.rotation.y += 0.01;
-        renderer.render(scene, camera);
+      
+      	requestAnimationFrame( animate );
+      	pencilGroup.rotation.x += 0.01;
+      	pencilGroup.rotation.y += 0.01;
+      	renderer.render( scene, camera );
+      
       };
 
       animate();
