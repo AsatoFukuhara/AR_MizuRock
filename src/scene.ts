@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import useLogger from './logger';
+//import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; 
 const log = useLogger();
 
 export interface ARScene {
