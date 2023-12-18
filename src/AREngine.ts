@@ -47,7 +47,21 @@ export class AREngine {
 
         this.arScene = ar_scene;
     }
-
+    async displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3): Promise<THREE.Object3D> {
+        return new Promise((resolve) => {
+            const loader = new GLTFLoader();
+            loader.load(url, (gltf) => {
+                const model = gltf.scene;
+                model.position.copy(position);
+                model.rotation.copy(rotation);
+                model.scale.copy(scale);
+                this.scene.add(model);
+                resolve(model);
+            });
+        });
+    }
+    
+/*
     displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3) {
         const loader = new GLTFLoader();
         loader.load(url, (gltf) => {
@@ -58,9 +72,10 @@ export class AREngine {
             this.scene.add(model);
         });
     }
+*/    
     
 
-    start(video_canvas: string) {
+    async start(video_canvas: string) {
         const ar_base_element = document.getElementById(video_canvas)
 
         if (!ar_base_element) {
@@ -83,8 +98,14 @@ export class AREngine {
         scene.add(light);
 
         //GTLF
-        this.displayGLBModel('./src/pen.glb', new THREE.Vector3(0, 3, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(10, 10, 10));
-        this.displayGLBModel('./src/note.glb', new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(20,20,20));
+        const Group = new THREE.Group();
+        const model_pen:THREE.Object3D = await this.displayGLBModel('./src/pen.glb', new THREE.Vector3(0, 1, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(10, 10, 10));
+        Group.add(model_pen);
+        const model_note:THREE.Object3D= await this.displayGLBModel('./src/note.glb', new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(20,20,20));
+        Group.add(model_note);
+        const model_erecil:THREE.Object3D= await this.displayGLBModel('./src/erasel.glb', new THREE.Vector3(0, 2, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(10,10,10));
+        Group.add(model_erecil);
+        scene.add(Group); 
 
         const arToolkitSource = new THREEx.ArToolkitSource({
             sourceType: 'webcam',
@@ -174,6 +195,8 @@ export class AREngine {
             lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60;
             var deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
             lastTimeMsec = nowMsec;
+
+            Group.rotation.y += 0.01;
 
             update_ar();
             render(deltaMsec / 1000);
