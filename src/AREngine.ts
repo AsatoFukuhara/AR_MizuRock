@@ -4,10 +4,12 @@ import * as THREE from "three";
 import { THREEx, ARjs } from "@ar-js-org/ar.js-threejs"
 import type { ArMarkerControls } from "@ar-js-org/ar.js-threejs/types/ArMarkerControls";
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';  
+import { moveObject } from "./game";
 
 THREEx.ArToolkitContext.baseURL = "./";
 
 const log = useLogger();
+export const group = new THREE.Group();
 
 export interface AREngineDelegate {
     onRender?(renderer: THREE.Renderer): void;
@@ -47,6 +49,7 @@ export class AREngine {
 
         this.arScene = ar_scene;
     }
+    /*
     async displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3): Promise<THREE.Object3D> {
         return new Promise((resolve) => {
             const loader = new GLTFLoader();
@@ -60,6 +63,7 @@ export class AREngine {
             });
         });
     }
+    */
     
 /*
     displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3) {
@@ -98,14 +102,31 @@ export class AREngine {
         scene.add(light);
 
         //GTLF
-        const Group = new THREE.Group();
-        const model_pen:THREE.Object3D = await this.displayGLBModel('./src/pen.glb', new THREE.Vector3(0, 1, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(10, 10, 10));
-        Group.add(model_pen);
-        const model_note:THREE.Object3D= await this.displayGLBModel('./src/note.glb', new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(20,20,20));
-        Group.add(model_note);
-        const model_erecil:THREE.Object3D= await this.displayGLBModel('./src/erasel.glb', new THREE.Vector3(0, 2, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(10,10,10));
-        Group.add(model_erecil);
-        scene.add(Group); 
+        async function loadAndAddModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3) {
+            try {
+                const Model: THREE.Object3D = await new Promise((resolve, reject) => {
+                    const loader = new GLTFLoader();
+                    loader.load(url, (gltf) => {
+                        const model = gltf.scene;
+                        model.position.copy(position);
+                        model.rotation.copy(rotation);
+                        model.scale.copy(scale);
+                        group.add(model);
+                        resolve(model);
+                    }, undefined, reject);
+                });
+            } catch (error) {
+                console.error('Error loading GLB model:', error);
+            }
+        }
+        //groupにaddされる
+        loadAndAddModel.call(this, './src/pen.glb', new THREE.Vector3(0, 0.3, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
+        loadAndAddModel.call(this, './src/note.glb', new THREE.Vector3(0, 0.1, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
+        loadAndAddModel.call(this, './src/erasel.glb', new THREE.Vector3(0, 0.2, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
+        loadAndAddModel.call(this, './src/caterpillar.glb', new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(0.1, 0.1, 0.1));
+        //表示
+        scene.add(group);
+        moveObject();
 
         const arToolkitSource = new THREEx.ArToolkitSource({
             sourceType: 'webcam',
@@ -196,7 +217,7 @@ export class AREngine {
             var deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
             lastTimeMsec = nowMsec;
 
-            Group.rotation.y += 0.01;
+            group.rotation.y += 0.01;
 
             update_ar();
             render(deltaMsec / 1000);
