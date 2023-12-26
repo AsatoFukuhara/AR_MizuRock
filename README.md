@@ -1,16 +1,9 @@
-# ar.js+three.js demo
+# 変更内容
 
-ar.js+three.jsのデモ。ios含む、safariで実行可能。
+主に赤嶺先生のコードを使用しているので動かし方はそこまで大差はないと思われる
 
-## build
-nodejsをインストールする
+但しSSL証明書を作成しないと実行できないはずなのでpullした後は各自"自己署名のSSL証明書を用意する"と"viteの設定"を実行して動かしてください
 
-必要なライブラリをインストールする。
-```sh
-cd webar_demo
-npm install
-npm build
-```
 
 ## devサーバーの準備
 ### httpsでアクセスできるようにする
