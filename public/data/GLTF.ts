@@ -14,7 +14,8 @@ async function loadModel(modelPath: string) {
   const loader = new GLTFLoader();
   return new Promise<THREE.Group>((resolve, reject) => {
     loader.load(modelPath, (gltf) => {
-      resolve(gltf.scene);
+      //resolve(gltf.scene);
+      return gltf.scene;//100％違う
     }, undefined, reject);
   });
 }

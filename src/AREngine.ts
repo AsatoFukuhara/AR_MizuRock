@@ -49,7 +49,7 @@ export class AREngine {
 
         this.arScene = ar_scene;
     }
-    /*
+    
     async displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3): Promise<THREE.Object3D> {
         return new Promise((resolve) => {
             const loader = new GLTFLoader();
@@ -63,7 +63,7 @@ export class AREngine {
             });
         });
     }
-    */
+    
     
 /*
     displayGLBModel(url: string, position: THREE.Vector3, rotation: THREE.Euler, scale: THREE.Vector3) {
@@ -77,7 +77,10 @@ export class AREngine {
         });
     }
 */    
-    
+    addgroup(){
+        const scene = this.scene;
+        scene.add(group);
+    }
 
     async start(video_canvas: string) {
         const ar_base_element = document.getElementById(video_canvas)
@@ -120,12 +123,12 @@ export class AREngine {
             }
         }
         //groupにaddされる
-        loadAndAddModel.call(this, './src/pen.glb', new THREE.Vector3(0, 0.3, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
+        loadAndAddModel.call(this, './src/pen.glb', new THREE.Vector3(0, 0.3, 0), new THREE.Euler(0, -Math.PI/2, 0), new THREE.Vector3(2, 2, 2));
         loadAndAddModel.call(this, './src/note.glb', new THREE.Vector3(0, 0.1, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
         loadAndAddModel.call(this, './src/erasel.glb', new THREE.Vector3(0, 0.2, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(2, 2, 2));
         loadAndAddModel.call(this, './src/caterpillar.glb', new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0), new THREE.Vector3(0.1, 0.1, 0.1));
         //表示
-        scene.add(group);
+        // scene.add(group);
         moveObject();
 
         const arToolkitSource = new THREEx.ArToolkitSource({
@@ -217,7 +220,7 @@ export class AREngine {
             var deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
             lastTimeMsec = nowMsec;
 
-            group.rotation.y += 0.01;
+            //group.rotation.y += 0.01;
 
             update_ar();
             render(deltaMsec / 1000);
