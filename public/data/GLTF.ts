@@ -15,7 +15,7 @@ async function loadModel(modelPath: string) {
   return new Promise<THREE.Group>((resolve, reject) => {
     loader.load(modelPath, (gltf) => {
       //resolve(gltf.scene);
-      return gltf.scene;//100％違う
+      return gltf.scene;//100％違うとも言い切れない
     }, undefined, reject);
   });
 }

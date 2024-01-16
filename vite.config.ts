@@ -22,7 +22,7 @@ export default defineConfig({
       passphrase: '0000',
     },
   },
-  base: '/webxr/',
+  base: '/~e205730/TankAR/',
   build: {
     assetsDir: 'assets',
     // sourcemap: true
