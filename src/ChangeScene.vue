@@ -53,11 +53,14 @@
     }
   </style>
   
+
+
   <script setup lang="ts">
   import { useAREngine } from './AREngine';
   import { TestScene, TestScene2 } from './scene';
   import * as THREE from 'three';
   import { onMounted } from 'vue';
+  import { group } from './AREngine'
   
   let canvas: HTMLCanvasElement | null = null; // 初期値を null に設定
   let scene: THREE.Scene;
@@ -109,13 +112,13 @@
   };
   
   const dragStart = (): void => {
-    if (!model) return;
+    if (!group) return;
     dragUpdate();
   };
   
   const dragUpdate = (): void => {
     if (vectorMagnitude !== 0) {
-      model.translateZ(vectorMagnitude / 10000);
+      group.translateZ(vectorMagnitude / 100000);
     }
     updateRequestId = requestAnimationFrame(dragUpdate);
   };
@@ -145,7 +148,7 @@
     vectorMagnitude = vector2d.x * vector2d.x + vector2d.y * vector2d.y;
   
     const vector3d = new THREE.Vector3(vector2d.x * 1000, 0, vector2d.y * 1000);
-    model.lookAt(vector3d);
+    group.lookAt(vector3d);
   
     joystickBall.style.left = `calc(50% + ${touchX}px)`;
     joystickBall.style.top = `calc(50% + ${touchY}px)`;
@@ -161,7 +164,7 @@
   const setUpScene = (): void => {
     canvas = document.getElementById("canvas") as HTMLCanvasElement;
     setScene();
-    setCamera();
+    //setCamera();
     setObjects();
     setLights();
     setRenderer();
@@ -181,14 +184,16 @@
     camera.position.set(0, 8, 8);
     camera.lookAt(new THREE.Vector3());
   };
+
+
   
   const setObjects = (): void => {
     const geo = new THREE.BoxGeometry(1, 1, 1);
     const mat = new THREE.MeshPhongMaterial({ color: 0x7140ce });
   
-    model = new THREE.Mesh(geo, mat);
-    model.rotation.y = THREE.MathUtils.degToRad(45);
-    scene.add(model);
+    //model = new THREE.Mesh(geo, mat);
+    //model.rotation.y = THREE.MathUtils.degToRad(45);
+    //scene.add(model);
   };
   
   const setLights = (): void => {
